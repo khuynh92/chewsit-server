@@ -21,7 +21,7 @@ app.use(express.urlencoded({extended:true}));
 
 
 app.get('/api/yelp/v3/sushi/98121', (req, res) => {
-  superagent.get('https://api.yelp.com/v3/businesses/search?term=sushi&location=98121&limit=50')
+  superagent.get('https://api.yelp.com/v3/businesses/search?term=sushi&location=98121&limit=50&price=$$$$')
     .set('Authorization', `Bearer ${API_KEY}`)
     // .then(results => {
     //   var offset = Math.floor(Math.random()*JSON.parse(results.text).total);
@@ -29,6 +29,14 @@ app.get('/api/yelp/v3/sushi/98121', (req, res) => {
     .then(results => res.send(JSON.parse(results.text)))
     .catch(err => console.log(err));
 });
+
+app.get('/api/yelp/v3/:food/:zip/:price/:range', (req, res) => {
+  superagent.get(`https://api.yelp.com/v3/businesses/search?open_now=true&term=${req.params.food}&location=${req.params.zip}&limit=50&price=${req.params.price}&radius=${req.params.range}`)
+  .set('Authorization', `Bearer ${API_KEY}`)
+  .then(results => res.send(JSON.parse(results.text)))
+  .catch(err => console.log(err));
+});
+
 
 
 
