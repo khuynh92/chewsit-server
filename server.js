@@ -17,20 +17,6 @@ const API_KEY = process.env.API_KEY;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.static('./public'));
-
-
-// app.get('/api/yelp/v3/sushi/98121', (req, res) => {
-//   superagent.get('https://api.yelp.com/v3/businesses/search?categories=sushi&location=98121&limit=50&price=$$$$')
-//     .set('Authorization', `Bearer ${API_KEY}`)
-//     // .then(results => {
-//     //   var offset = Math.floor(Math.random()*JSON.parse(results.text).total);
-//     // } )
-//     .then(results => res.send(JSON.parse(results.text)))
-//     .catch(err => console.log(err));
-// });
-
-
 
 //Changed open now to false to test categories after hours 
 app.get('/api/yelp/v3/:food/:location/:price/:range/:offset', (req, res) => {
@@ -39,34 +25,5 @@ app.get('/api/yelp/v3/:food/:location/:price/:range/:offset', (req, res) => {
     .then(results => res.send(JSON.parse(results.text)))
     .catch(err => console.log(err));
 });
-//Changed open now to false to test categories after hours
-// app.get('/total/api/yelp/v3/:food/:location/:price/:range', (req, res) => {
-//   superagent.get(`https://api.yelp.com/v3/businesses/search?categories=${req.params.food}&${req.params.location}&limit=50&price=${req.params.price}&radius=${req.params.range}`)
-//     .set('Authorization', `Bearer ${API_KEY}`)
-//     .then(results => {
-//       res.send(JSON.stringify(JSON.parse(results.text).total));
-//     })
-//     .catch(err => console.log(err));
-// });
-
-
-// //for latitude and longitude requests
-// app.get('/api/yelp/v3/:food/:lat/:long/:price/:range/:offset', (req, res) => {
-//   superagent.get(`https://api.yelp.com/v3/businesses/search?categories=${req.params.food}&latitude=${req.params.lat}&longitude=${req.params.long}&limit=50&price=${req.params.price}&radius=${req.params.range}&offset=${req.params.offset}`)
-//     .set('Authorization', `Bearer ${API_KEY}`)
-//     .then(results => res.send(JSON.parse(results.text)))
-//     .catch(err => console.log(err));
-// });
-// //Changed open now to false to test categories after hours
-// app.get('/total/api/yelp/v3/:food/:lat/:long/:price/:range', (req, res) => {
-//   superagent.get(`https://api.yelp.com/v3/businesses/search?categories=${req.params.food}&latitude=${req.params.lat}&longitude=${req.params.long}&limit=50&price=${req.params.price}&radius=${req.params.range}`)
-//     .set('Authorization', `Bearer ${API_KEY}`)
-//     .then(results => {
-//       res.send(JSON.stringify(JSON.parse(results.text).total));
-//     })
-//     .catch(err => console.log(err));
-// });
-
-
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}!`));
