@@ -84,10 +84,10 @@ app.get('/favorites/all', (req, res) => {
 //database add new favorite
 app.post('/favorites/new', (req, res) => {
   client.query(`
-  INSERT INTO users (name, pin)
+  INSERT INTO favorites (yelp_id, favorites_id)
   VALUES ($1, $2)
   ;`,
-  [req.body.name, req.body.pin]
+  [req.body.yelp_id, req.body.favorites_id]
   )
     .then(results => res.send(results.rows))
     .catch(err => console.log(err));
