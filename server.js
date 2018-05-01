@@ -25,20 +25,21 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}!`));
  
 
 //Changed open now to false to test categories after hours 
-app.get('/api/yelp/v3/:food/:zip/:price/:range/:offset', (req, res) => {
-  superagent.get(`https://api.yelp.com/v3/businesses/search?open_now=true&categories=${req.params.food}&location=${req.params.zip}&limit=50&price=${req.params.price}&radius=${req.params.range}&offset=${req.params.offset}`)
+app.get('/api/yelp/v3/:food/:location/:price/:range/:offset', (req, res) => {
+  superagent.get(`https://api.yelp.com/v3/businesses/search?categories=${req.params.food}&${req.params.location}&limit=50&price=${req.params.price}&radius=${req.params.range}&offset=${req.params.offset}`)
     .set('Authorization', `Bearer ${API_KEY}`)
     .then(results => res.send(JSON.parse(results.text)))
     .catch(err => console.log(err));
 });
-//Changed open now to false to test categories after hours
-app.get('/total/api/yelp/v3/:food/:zip/:price/:range', (req, res) => {
-  superagent.get(`https://api.yelp.com/v3/businesses/search?open_now=true&categories=${req.params.food}&location=${req.params.zip}&limit=50&price=${req.params.price}&radius=${req.params.range}`)
-    .set('Authorization', `Bearer ${API_KEY}`)
-    .then(results => {
-      res.send(JSON.stringify(JSON.parse(results.text).total));
-    })
-    .catch(err => console.log(err));
+
+//database test get
+app.get('/testUsers', (req, res) => {
+  client.query(`
+  SELECT users.name, favorites.yelp_id FROM users
+  INNER JOIN favorites ON users.id = favorites.favorites_id
+  WHERE users.id=2;
+  `)
+    .then(results => res.send(results.rows));
 });
 
 //database test get all users and favorites
@@ -143,6 +144,7 @@ app.delete('/favorites/delete/:id', (req, res) => {
     .catch(err => console.log(err));
 });
 
+database test update user info
 
 //database delete user
 app.delete('/users/delete/:id' , (req, res) => {
