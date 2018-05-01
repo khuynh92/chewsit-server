@@ -41,38 +41,116 @@ app.get('/total/api/yelp/v3/:food/:zip/:price/:range', (req, res) => {
     .catch(err => console.log(err));
 });
 
-//database test get
-app.get('/testUsers', (req, res) => {
+//database test get all users and favorites
+app.get('/all', (req, res) => {
   client.query(`
-  SELECT users.name, favorites.yelp_id FROM users
-  INNER JOIN favorites ON users.id = favorites.favorites_id
-  WHERE users.id=2;
-  `)
-    .then(results => res.send(results.rows));
+  SELECT * FROM users
+  INNER JOIN favorites ON users.id = favorites.users_id
+  ;`)
+    .then(results => res.send(results.rows))
+    .catch(err => console.log(err));    
 });
 
-//database test new user
-app.post('/addUser', (req, res) => {
+//database get all users
+app.get('/users/all', (req, res) => {
+  client.query(`
+  SELECT * FROM users
+  ;`)
+    .then(results => res.send(results.rows))
+    .catch(err => console.log(err));   
+});
+
+//database add new user
+app.post('/users/new', (req, res) => {
   client.query(`
   INSERT INTO users (name, pin)
-  VALUES ($1, $2);
-  `,
-  [request.params.name, request.params.pin]
+  VALUES ($1, $2)
+  ;`,
+  [req.body.name, req.body.pin]
   )
-    .then(results => res.send(results.rows));
+    .then(results => res.send(results.rows))
+    .catch(err => console.log(err));
 });
 
-//database test new favorite
-app.post('/newFavorite', (req, res) => {
+//database get all favorites
+app.get('/favorites/all', (req, res) => {
   client.query(`
-  INSERT INTO favorites (yelp_id, favorites_id)
-  VALUES ($1, $2);
-  `,
-  [request.params.yelp_id, request.params.favorites_id]
-  )
-    .then(results => res.send(results.rows));
+    SELECT * FROM favorites
+    ;`)
+    .then(results => res.send(results.rows))
+    .catch(err => console.log(err));   
 });
+
+//database add new favorite
+app.post('/favorites/new', (req, res) => {
+  client.query(`
+  INSERT INTO favorites (yelp_id, users_id)
+  VALUES ($1, $2)
+  ;`,
+  [req.body.yelp_id, req.body.users_id]
+  )
+    .then(results => res.send(results.rows))
+    .catch(err => console.log(err));
+});
+
 
 //database test update user info
 
+app.put('/users/update/name', (req, res) => {
+  client.query(`
+  UPDATE users
+  SET name=$1
+  WHERE id=$2
+  ;`,
+  [request.params.name, request.params.id]
+  )
+    .then(results => res.send('Update successful'))
+    .catch(err => console.log(err))
+});
+
+app.put('/users/update/pin', (req, res) => {
+  client.query(`
+  UPDATE users
+  SET pin=$1
+  WHERE id=$2
+  ;`,
+  [req.params.pin, req.params.id])
+    .then(results => res.send('Update successful'))
+    .catch(err => console.log(err));
+});
+
 //database test update favorite info
+
+app.put('/users/update/favorites', (req, res) => {
+  client.query(`
+  UPDATE favorites
+  SET yelp_id=$1
+  WHERE users_id=$2
+  `,
+  [req.params.yelp_id, req.params.favorites_id])
+    .then(results => res.send('Update successful'))
+    .catch(err => console.log(err));
+});
+
+//database delete favorite
+app.delete('/favorites/delete/:id', (req, res) => {
+  client.query(`
+  DELETE FROM favorites
+  where users_id=$1
+ `,
+  [req.params.id])
+    .then(results => res.send('Delete successful'))
+    .catch(err => console.log(err));
+});
+
+
+//database delete user
+app.delete('/users/delete/:id' , (req, res) => {
+  client.query(`
+  DELETE FROM users
+  where id=$1
+ ;`,
+  [request.params.id])
+    .then(results => res.send('Delete successful'))
+    .catch(err => console.log(err));
+});

@@ -4,24 +4,24 @@ CREATE DATABASE chews_it;
 
 CREATE TABLE IF NOT EXISTS users (
 id SERIAL PRIMARY KEY,
-name VARCHAR(100) NOT NULL,
+name VARCHAR(100) NOT NULL UNIQUE,
 pin VARCHAR(20) 
 );
 
 CREATE TABLE IF NOT EXISTS favorites (
-id SERIAL PRIMARY KEY,
+id INT PRIMARY KEY,
 yelp_id VARCHAR(255),
-favorites_id INT REFERENCES users(id)
+users_id INT REFERENCES users(id)
 );
 
 //test
 
 INSERT INTO users (name , pin) VALUES ('Jesse', '8246');
 INSERT INTO users (name, pin) VALUES ('Judah', '1234');
-INSERT INTO favorites (yelp_id, favorites_id) values ('blah', 1);
-INSERT INTO favorites (yelp_id, favorites_id) values ('this is more .blah1 address', 1);
-INSERT INTO favorites (yelp_id, favorites_id) values ('morething.id842fromsomeoneelse', 2);
-INSERT INTO FAVORITES (yelp_id, favorites_id) values ('thisplaceIhangout', 2);
+INSERT INTO favorites (yelp_id, users_id) values ('blah', 1);
+INSERT INTO favorites (yelp_id, users_id) values ('this is more .blah1 address', 1);
+INSERT INTO favorites (yelp_id, users_id) values ('morething.id842fromsomeoneelse', 2);
+INSERT INTO FAVORITES (yelp_id, users_id) values ('thisplaceIhangout', 2);
 
  favorites (id, yelp_id) values (1, 'this stuff i like');
 
@@ -30,7 +30,7 @@ INSERT INTO FAVORITES (yelp_id, favorites_id) values ('thisplaceIhangout', 2);
 app.get('/testUsers', (req, res) => {
   client.query(`
   SELECT * FROM users
-  INNER JOIN favorites ON users.id = favorites.favorites_id;
+  INNER JOIN favorites ON users.id = favorites.users_id;
   `)
     .then(results => res.send(results.rows));
 });
@@ -40,13 +40,13 @@ app.get('/testUsers', (req, res) => {
 app.get('/testUsers', (req, res) => {
   client.query(`
   SELECT users.name, favorites.yelp_id FROM users
-  INNER JOIN favorites ON users.id = favorites.favorites_id
+  INNER JOIN favorites ON users.id = favorites.users_id
   WHERE users.id=2;
   `)
     .then(results => res.send(results.rows));
 });
 
-//database test new user
+//database add new user
 app.post('/addUser', (req, res) => {
   client.query(`
   INSERT INTO users (name, pin)
@@ -57,20 +57,17 @@ app.post('/addUser', (req, res) => {
     .then(results => res.send(results.rows));
 });
 
-//database test new favorite
-app.post('/newFavorite', (req, res) => {
+//database add new favorite
+app.post('/favorites/new', (req, res) => {
   client.query(`
-  INSERT INTO favorites (yelp_id, favorites_id)
-  VALUES ($1, $2);
-  `,
-  [request.params.yelp_id, request.params.favorites_id]
+  INSERT INTO favorites (yelp_id, users_id)
+  VALUES ($1, $2)
+  ;`,
+  [req.body.yelp_id, req.body.users_id]
   )
-    .then(results => res.send(results.rows));
+    .then(results => res.send(results.rows))
+    .catch(err => console.log(err));
 });
-
-//database test update user info
-
-//database test update favorite info
 
 
 
