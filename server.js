@@ -10,6 +10,7 @@ const PORT = process.env.PORT;
 const app = express();
 const API_KEY = process.env.API_KEY;
 const DATABASE_URL = process.env.DATABASE_URL;
+//MAKE SURE TO ADD ENV URL TO HEROKU!!!!
 
 const client = new pg.Client(DATABASE_URL);
 client.connect();
@@ -36,7 +37,7 @@ app.get('/api/yelp/v3/:food/:location/:price/:range/:offset', (req, res) => {
 app.get('/testUsers', (req, res) => {
   client.query(`
   SELECT users.name, favorites.yelp_id FROM users
-  INNER JOIN favorites ON users.id = favorites.favorites_id
+  INNER JOIN favorites ON users.id = favorites.users_id
   WHERE users.id=2;
   `)
     .then(results => res.send(results.rows));
@@ -49,7 +50,7 @@ app.get('/all', (req, res) => {
   INNER JOIN favorites ON users.id = favorites.users_id
   ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.log(err));    
+    .catch(err => console.err(err));    
 });
 
 //database get all users
@@ -58,7 +59,7 @@ app.get('/users/all', (req, res) => {
   SELECT * FROM users
   ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.log(err));   
+    .catch(err => console.err(err));   
 });
 
 //database add new user
@@ -70,7 +71,7 @@ app.post('/users/new', (req, res) => {
   [req.body.name, req.body.pin]
   )
     .then(results => res.send(results.rows))
-    .catch(err => console.log(err));
+    .catch(err => console.err(err));
 });
 
 //database get all favorites
@@ -79,7 +80,7 @@ app.get('/favorites/all', (req, res) => {
     SELECT * FROM favorites
     ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.log(err));   
+    .catch(err => console.err(err));   
 });
 
 //database add new favorite
@@ -91,9 +92,21 @@ app.post('/favorites/new', (req, res) => {
   [req.body.yelp_id, req.body.users_id]
   )
     .then(results => res.send(results.rows))
-    .catch(err => console.log(err));
+    .catch(err => console.err(err));
 });
 
+//database update preferences
+app.put('/preferences/update', (req, res) => {
+  client.query(`
+  UPDATE users 
+  SET preferences = $1
+  WHERE id = $2
+  ;`,
+  [req.body.preferences, req.body.id]
+  )
+    .then(() => res.send('Preferences updated'))
+    .catch(err => console.err(err));
+});
 
 //database test update user info
 
@@ -144,7 +157,7 @@ app.delete('/favorites/delete/:id', (req, res) => {
     .catch(err => console.log(err));
 });
 
-database test update user info
+//database test update user info
 
 //database delete user
 app.delete('/users/delete/:id' , (req, res) => {
