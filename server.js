@@ -45,7 +45,7 @@ app.get('/total/api/yelp/v3/:food/:zip/:price/:range', (req, res) => {
 app.get('/all', (req, res) => {
   client.query(`
   SELECT * FROM users
-  INNER JOIN favorites ON users.id = favorites.favorites_id
+  INNER JOIN favorites ON users.id = favorites.users_id
   ;`)
     .then(results => res.send(results.rows))
     .catch(err => console.log(err));    
@@ -84,10 +84,10 @@ app.get('/favorites/all', (req, res) => {
 //database add new favorite
 app.post('/favorites/new', (req, res) => {
   client.query(`
-  INSERT INTO favorites (yelp_id, favorites_id)
+  INSERT INTO favorites (yelp_id, users_id)
   VALUES ($1, $2)
   ;`,
-  [req.body.yelp_id, req.body.favorites_id]
+  [req.body.yelp_id, req.body.users_id]
   )
     .then(results => res.send(results.rows))
     .catch(err => console.log(err));
@@ -114,7 +114,7 @@ app.put('/users/update/pin', (req, res) => {
   SET pin=$1
   WHERE id=$2
   ;`,
-  [request.params.pin, request.params.id])
+  [req.params.pin, req.params.id])
     .then(results => res.send('Update successful'))
     .catch(err => console.log(err));
 });
@@ -125,9 +125,9 @@ app.put('/users/update/favorites', (req, res) => {
   client.query(`
   UPDATE favorites
   SET yelp_id=$1
-  WHERE favorites_id=$2
+  WHERE users_id=$2
   `,
-  [request.params.yelp_id, request.params.favorites_id])
+  [req.params.yelp_id, req.params.favorites_id])
     .then(results => res.send('Update successful'))
     .catch(err => console.log(err));
 });
@@ -136,9 +136,9 @@ app.put('/users/update/favorites', (req, res) => {
 app.delete('/favorites/delete/:id', (req, res) => {
   client.query(`
   DELETE FROM favorites
-  where id=$1
+  where users_id=$1
  `,
-  [request.params.id])
+  [req.params.id])
     .then(results => res.send('Delete successful'))
     .catch(err => console.log(err));
 });
