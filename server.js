@@ -40,7 +40,7 @@ app.get('/all', (req, res) => {
   INNER JOIN favorites ON users.id = favorites.users_id
   ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.err(err));    
+    .catch(err => console.error(err));    
 });
 
 //database get all users
@@ -49,7 +49,7 @@ app.get('/users/all', (req, res) => {
   SELECT * FROM users
   ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.err(err));   
+    .catch(err => console.errpr(err));   
 });
 
 //database add new user
@@ -61,7 +61,7 @@ app.post('/users/new', (req, res) => {
   [req.body.name, req.body.pin]
   )
     .then(results => res.send(results.rows))
-    .catch(err => console.err(err));
+    .catch(err => console.error(err));
 });
 
 //database get all favorites
@@ -70,7 +70,7 @@ app.get('/favorites/all', (req, res) => {
     SELECT * FROM favorites
     ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.err(err));   
+    .catch(err => console.error(err));   
 });
 
 //database add new favorite
@@ -82,7 +82,7 @@ app.post('/favorites/new', (req, res) => {
   [req.body.yelp_id, req.body.users_id]
   )
     .then(results => res.send(results.rows))
-    .catch(err => console.err(err));
+    .catch(err => console.error(err));
 });
 
 //database update preferences
@@ -95,7 +95,7 @@ app.put('/preferences/update', (req, res) => {
   [req.body.preferences, req.body.id]
   )
     .then(() => res.send('Preferences updated'))
-    .catch(err => console.err(err));
+    .catch(err => console.error(err));
 });
 
 //database login
