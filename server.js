@@ -33,17 +33,7 @@ app.get('/api/yelp/v3/:food/:location/:price/:range/:offset', (req, res) => {
     .catch(err => console.log(err));
 });
 
-//database test get
-app.get('/testUsers', (req, res) => {
-  client.query(`
-  SELECT users.name, favorites.yelp_id FROM users
-  INNER JOIN favorites ON users.id = favorites.users_id
-  WHERE users.id=2;
-  `)
-    .then(results => res.send(results.rows));
-});
-
-//database test get all users and favorites
+//database get all users and favorites
 app.get('/all', (req, res) => {
   client.query(`
   SELECT * FROM users
@@ -108,30 +98,46 @@ app.put('/preferences/update', (req, res) => {
     .catch(err => console.err(err));
 });
 
+//database login
+app.get('/users/login/:userName/:userPin', (req, res) => {
+  client.query(`
+  SELECT * FROM users
+  WHERE name = $1
+  AND pin = $2
+  ;`,
+  [req.params.userName, req.params.userPin]
+  )
+  .then(results => {
+      res.send(results.rows);
+      console.log(results);
+    })
+    .catch(err => console.error(err));
+});
+
 //database test update user info
 
-app.put('/users/update/name', (req, res) => {
-  client.query(`
-  UPDATE users
-  SET name=$1
-  WHERE id=$2
-  ;`,
-  [request.params.name, request.params.id]
-  )
-    .then(results => res.send('Update successful'))
-    .catch(err => console.log(err))
-});
+// app.put('/users/update/name', (req, res) => {
+//   client.query(`
+//   UPDATE users
+//   SET name=$1
+//   WHERE id=$2
+//   ;`,
+//   [request.params.name, request.params.id]
+//   )
+//     .then(results => res.send('Update successful'))
+//     .catch(err => console.log(err))
+// });
 
-app.put('/users/update/pin', (req, res) => {
-  client.query(`
-  UPDATE users
-  SET pin=$1
-  WHERE id=$2
-  ;`,
-  [req.params.pin, req.params.id])
-    .then(results => res.send('Update successful'))
-    .catch(err => console.log(err));
-});
+// app.put('/users/update/pin', (req, res) => {
+//   client.query(`
+//   UPDATE users
+//   SET pin=$1
+//   WHERE id=$2
+//   ;`,
+//   [req.params.pin, req.params.id])
+//     .then(results => res.send('Update successful'))
+//     .catch(err => console.log(err));
+// });
 
 //database test update favorite info
 
