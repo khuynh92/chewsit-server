@@ -3,7 +3,6 @@
 require('dotenv').config();
 const superagent = require('superagent');
 const pg = require('pg');
-const fs = require('fs');
 const cors = require('cors');
 const express = require('express');
 const PORT = process.env.PORT;
@@ -23,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}!`));
- 
+
 
 //Changed open now to false to test categories after hours 
 app.get('/api/yelp/v3/:food/:location/:price/:range/:offset', (req, res) => {
@@ -40,7 +39,7 @@ app.get('/all', (req, res) => {
   INNER JOIN favorites ON users.id = favorites.users_id
   ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.error(err));    
+    .catch(err => console.error(err));
 });
 
 //database get all users
@@ -49,7 +48,7 @@ app.get('/users/all', (req, res) => {
   SELECT * FROM users
   ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.error(err));   
+    .catch(err => console.error(err));
 });
 
 //database add new user
@@ -58,7 +57,7 @@ app.post('/users/new', (req, res) => {
   INSERT INTO users (name, pin)
   VALUES ($1, $2)
   ;`,
-  [req.body.name, req.body.pin]
+    [req.body.name, req.body.pin]
   )
     .then(results => res.send(results.rows))
     .catch(err => console.error(err));
@@ -70,7 +69,7 @@ app.get('/favorites/all', (req, res) => {
     SELECT * FROM favorites
     ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.error(err));   
+    .catch(err => console.error(err));
 });
 
 //database add new favorite
@@ -79,7 +78,7 @@ app.post('/favorites/new', (req, res) => {
   INSERT INTO favorites (yelp_id, users_id)
   VALUES ($1, $2)
   ;`,
-  [req.body.yelp_id, req.body.users_id]
+    [req.body.yelp_id, req.body.users_id]
   )
     .then(results => res.send(results.rows))
     .catch(err => console.error(err));
@@ -92,7 +91,7 @@ app.put('/preferences/update', (req, res) => {
   SET preferences = $1
   WHERE id = $2
   ;`,
-  [req.body.preferences, req.body.id]
+    [req.body.preferences, req.body.id]
   )
     .then(() => res.send('Preferences updated'))
     .catch(err => console.error(err));
@@ -105,7 +104,7 @@ app.get('/users/login/:userName/:userPin', (req, res) => {
   WHERE name = $1
   AND pin = $2
   ;`,
-  [req.params.userName, req.params.userPin]
+    [req.params.userName, req.params.userPin]
   )
     .then(results => {
       res.send(results.rows);
@@ -120,7 +119,7 @@ app.get('/users/favorites/:userID', (req, res) => {
   SELECT * FROM users
   WHERE id = $1
   ;`,
-  [req.params.userID]
+    [req.params.userID]
   )
     .then(results => {
       res.send(results.rows);
@@ -163,7 +162,7 @@ app.put('/users/update/favorites', (req, res) => {
   SET yelp_id=$1
   WHERE users_id=$2
   `,
-  [req.params.yelp_id, req.params.favorites_id])
+    [req.params.yelp_id, req.params.favorites_id])
     .then(results => res.send('Update successful'))
     .catch(err => console.error(err));
 });
@@ -174,7 +173,7 @@ app.delete('/favorites/delete/:id', (req, res) => {
   DELETE FROM favorites
   where users_id=$1
  `,
-  [req.params.id])
+    [req.params.id])
     .then(results => res.send('Delete successful'))
     .catch(err => console.error(err));
 });
@@ -182,12 +181,12 @@ app.delete('/favorites/delete/:id', (req, res) => {
 //database test update user info
 
 //database delete user
-app.delete('/users/delete/:id' , (req, res) => {
+app.delete('/users/delete/:id', (req, res) => {
   client.query(`
   DELETE FROM users
   where id=$1
  ;`,
-  [request.params.id])
+    [request.params.id])
     .then(results => res.send('Delete successful'))
     .catch(err => console.error(err));
 });
