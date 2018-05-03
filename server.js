@@ -114,6 +114,22 @@ app.get('/users/login/:userName/:userPin', (req, res) => {
     .catch(err => console.error(err));
 });
 
+//database retrieve favorites
+app.get('/users/favorites/:userID', (req, res) => {
+  client.query(`
+  SELECT * FROM users
+  WHERE id = $1
+  ;`,
+  [req.params.userID]
+  )
+    .then(results => {
+      res.send(results.rows);
+      console.log(results);
+    })
+    .catch(err => console.error(err));
+});
+
+
 //database test update user info
 
 // app.put('/users/update/name', (req, res) => {
