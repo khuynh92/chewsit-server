@@ -5,13 +5,14 @@ CREATE DATABASE chews_it;
 CREATE TABLE IF NOT EXISTS users (
 id SERIAL PRIMARY KEY,
 name VARCHAR(100) NOT NULL UNIQUE,
-pin VARCHAR NOT NULL(20),
+pin VARCHAR(20) NOT NULL,
 preferences TEXT
 );
 
 CREATE TABLE IF NOT EXISTS favorites (
 yelp_id VARCHAR(255),
-users_id INT REFERENCES users(id) NOT NULL
+users_id INT REFERENCES users(id) NOT NULL,
+notes TEXT
 );
 
 //test
