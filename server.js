@@ -49,7 +49,7 @@ app.get('/users/all', (req, res) => {
   SELECT * FROM users
   ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.errpr(err));   
+    .catch(err => console.error(err));   
 });
 
 //database add new user
