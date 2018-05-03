@@ -140,3 +140,24 @@ app.delete('/users/delete/:id' , (req, res) => {
     .then(results => res.send('Delete successful'))
     .catch(err => console.log(err));
 });
+
+//To Heroku from remote
+ PGPASSWORD=82469173 pg_dump -U postgres -F c -c -O chews_it > out.sql
+
+Use the dump file to create your heroku database.
+This step requires you to have a heroku app that's been setup with heroku postgres. You don't need to do anything with the CLI here as we will be doing all of this manually.
+
+First, navigate to your heroku app, click on resources, and click on the database to bring you to the database screen.
+Next, click on settings, and go to the database credentials.
+You should see a screen that looks like this.
+Note that this has the hostname, database, username, password, port, etc... You will need most of these for the next command.
+You will type in this command, but you will replace your specific pieces of data into this command:
+PGUSER=mibaxbq PGPASSWORD=0bdf8bbc6930e026d pg_restore -h 'ec2-60-13.compute-1.amazonaws.com' -d d6n3tt6nc < out.sql
+PGUSER & PGPASSWORD are the username and password from the credentials you got inside heroku.
+-h stands for hostname.
+-d stands for database. (The database from the creds.)
+< Note that this must be there and in this direction.
+out.sql This is referring to the out file we used earlier.
+If you typed this in correctly you WILL see a couple errors pop up. Ignore them for now and go back to heroku and check your database. You should see that there is a table added to your database.
+
+Note that you should only be doing this command to initially create ( and optionally seed) the deployed database. If there database already has this table and there is data in it then this will fail.
