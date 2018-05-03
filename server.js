@@ -30,7 +30,7 @@ app.get('/api/yelp/v3/:food/:location/:price/:range/:offset', (req, res) => {
   superagent.get(`https://api.yelp.com/v3/businesses/search?categories=${req.params.food}&${req.params.location}&limit=50&price=${req.params.price}&radius=${req.params.range}&offset=${req.params.offset}`)
     .set('Authorization', `Bearer ${API_KEY}`)
     .then(results => res.send(JSON.parse(results.text)))
-    .catch(err => console.log(err));
+    .catch(err => console.error(err));
 });
 
 //database get all users and favorites
@@ -107,7 +107,7 @@ app.get('/users/login/:userName/:userPin', (req, res) => {
   ;`,
   [req.params.userName, req.params.userPin]
   )
-  .then(results => {
+    .then(results => {
       res.send(results.rows);
       console.log(results);
     })
@@ -149,7 +149,7 @@ app.put('/users/update/favorites', (req, res) => {
   `,
   [req.params.yelp_id, req.params.favorites_id])
     .then(results => res.send('Update successful'))
-    .catch(err => console.log(err));
+    .catch(err => console.error(err));
 });
 
 //database delete favorite
@@ -160,7 +160,7 @@ app.delete('/favorites/delete/:id', (req, res) => {
  `,
   [req.params.id])
     .then(results => res.send('Delete successful'))
-    .catch(err => console.log(err));
+    .catch(err => console.error(err));
 });
 
 //database test update user info
@@ -173,5 +173,5 @@ app.delete('/users/delete/:id' , (req, res) => {
  ;`,
   [request.params.id])
     .then(results => res.send('Delete successful'))
-    .catch(err => console.log(err));
+    .catch(err => console.error(err));
 });
