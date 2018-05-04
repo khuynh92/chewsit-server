@@ -72,6 +72,21 @@ app.get('/favorites/all', (req, res) => {
     .catch(err => console.error(err));   
 });
 
+//database retrieve preferences
+app.get('/users/preferences/:userID', (req, res) => {
+  client.query(`
+  SELECT * FROM users
+  WHERE id = $1
+  ;`,
+  [req.params.userID]
+  )
+    .then(results => {
+      res.send(results.rows);
+      console.log(results);
+    })
+    .catch(err => console.error(err));
+});
+
 //database add new favorite
 app.post('/favorites/new', (req, res) => {
   client.query(`
