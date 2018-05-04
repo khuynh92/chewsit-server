@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}!`));
-
+ 
 
 //Changed open now to false to test categories after hours 
 app.get('/api/yelp/v3/:food/:location/:price/:range/:offset', (req, res) => {
@@ -39,7 +39,7 @@ app.get('/all', (req, res) => {
   INNER JOIN favorites ON users.id = favorites.users_id
   ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.error(err));
+    .catch(err => console.error(err));    
 });
 
 //database get all users
@@ -48,7 +48,7 @@ app.get('/users/all', (req, res) => {
   SELECT * FROM users
   ;`)
     .then(results => res.send(results.rows))
-    .catch(err => console.error(err));
+    .catch(err => console.error(err));   
 });
 
 //database add new user
@@ -69,6 +69,21 @@ app.get('/favorites/all', (req, res) => {
     SELECT * FROM favorites
     ;`)
     .then(results => res.send(results.rows))
+    .catch(err => console.error(err));   
+});
+
+//database retrieve preferences
+app.get('/users/preferences/:userID', (req, res) => {
+  client.query(`
+  SELECT * FROM users
+  WHERE id = $1
+  ;`,
+  [req.params.userID]
+  )
+    .then(results => {
+      res.send(results.rows);
+      console.log(results);
+    })
     .catch(err => console.error(err));
 });
 
@@ -156,7 +171,7 @@ app.delete('/favorites/delete/:id', (req, res) => {
 //database test update user info
 
 //database delete user
-app.delete('/users/delete/:id', (req, res) => {
+app.delete('/users/delete/:id' , (req, res) => {
   client.query(`
   DELETE FROM users
   where id=$1
