@@ -57,7 +57,7 @@ app.post('/users/new', (req, res) => {
   INSERT INTO users (name, pin)
   VALUES ($1, $2)
   ;`,
-    [req.body.name, req.body.pin]
+  [req.body.name, req.body.pin]
   )
     .then(results => res.send(results.rows))
     .catch(err => console.error(err));
@@ -75,10 +75,10 @@ app.get('/favorites/all', (req, res) => {
 //database add new favorite
 app.post('/favorites/new', (req, res) => {
   client.query(`
-  INSERT INTO favorites (yelp_id, users_id)
+  INSERT INTO favorites (yelp_id, users_id, notes)
   VALUES ($1, $2)
   ;`,
-    [req.body.yelp_id, req.body.users_id]
+  [req.body.yelp_id, req.body.users_id, req.body.notes]
   )
     .then(results => res.send(results.rows))
     .catch(err => console.error(err));
@@ -91,7 +91,7 @@ app.put('/preferences/update', (req, res) => {
   SET preferences = $1
   WHERE id = $2
   ;`,
-    [req.body.preferences, req.body.id]
+  [req.body.preferences, req.body.id]
   )
     .then(() => res.send('Preferences updated'))
     .catch(err => console.error(err));
@@ -104,7 +104,7 @@ app.get('/users/login/:userName/:userPin', (req, res) => {
   WHERE name = $1
   AND pin = $2
   ;`,
-    [req.params.userName, req.params.userPin]
+  [req.params.userName, req.params.userPin]
   )
     .then(results => {
       res.send(results.rows);
@@ -116,10 +116,11 @@ app.get('/users/login/:userName/:userPin', (req, res) => {
 //database retrieve favorites
 app.get('/users/favorites/:userID', (req, res) => {
   client.query(`
-  SELECT * FROM users
+  SELECT yelp_id, notes, rest_name FROM users
+  JOIN favorites ON users.id = favorites.users_id
   WHERE id = $1
   ;`,
-    [req.params.userID]
+  [req.params.userID]
   )
     .then(results => {
       res.send(results.rows);
@@ -127,32 +128,6 @@ app.get('/users/favorites/:userID', (req, res) => {
     })
     .catch(err => console.error(err));
 });
-
-
-//database test update user info
-
-// app.put('/users/update/name', (req, res) => {
-//   client.query(`
-//   UPDATE users
-//   SET name=$1
-//   WHERE id=$2
-//   ;`,
-//   [request.params.name, request.params.id]
-//   )
-//     .then(results => res.send('Update successful'))
-//     .catch(err => console.log(err))
-// });
-
-// app.put('/users/update/pin', (req, res) => {
-//   client.query(`
-//   UPDATE users
-//   SET pin=$1
-//   WHERE id=$2
-//   ;`,
-//   [req.params.pin, req.params.id])
-//     .then(results => res.send('Update successful'))
-//     .catch(err => console.log(err));
-// });
 
 //database test update favorite info
 
@@ -162,7 +137,7 @@ app.put('/users/update/favorites', (req, res) => {
   SET yelp_id=$1
   WHERE users_id=$2
   `,
-    [req.params.yelp_id, req.params.favorites_id])
+  [req.params.yelp_id, req.params.favorites_id])
     .then(results => res.send('Update successful'))
     .catch(err => console.error(err));
 });
@@ -173,7 +148,7 @@ app.delete('/favorites/delete/:id', (req, res) => {
   DELETE FROM favorites
   where users_id=$1
  `,
-    [req.params.id])
+  [req.params.id])
     .then(results => res.send('Delete successful'))
     .catch(err => console.error(err));
 });
@@ -186,7 +161,7 @@ app.delete('/users/delete/:id', (req, res) => {
   DELETE FROM users
   where id=$1
  ;`,
-    [request.params.id])
+  [request.params.id])
     .then(results => res.send('Delete successful'))
     .catch(err => console.error(err));
 });
