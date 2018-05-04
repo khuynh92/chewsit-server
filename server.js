@@ -60,7 +60,10 @@ app.post('/users/new', (req, res) => {
   [req.body.name, req.body.pin]
   )
     .then(results => res.send(results.rows))
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err);
+      res.send(400);
+    });
 });
 
 //database get all favorites
