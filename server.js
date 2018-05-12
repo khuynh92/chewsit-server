@@ -6,10 +6,14 @@ const pg = require('pg');
 const cors = require('cors');
 const express = require('express');
 const PORT = process.env.PORT;
+const GOOGLE_KEY = process.env.GOOGLE_KEY
 const app = express();
+var googleMapsClient = require('@google/maps').createClient({
+  key: GOOGLE_KEY,
+  Promise: Promise
+});
 const API_KEY = process.env.API_KEY;
 const DATABASE_URL = process.env.DATABASE_URL;
-//MAKE SURE TO ADD ENV URL TO HEROKU!!!!
 
 const client = new pg.Client(DATABASE_URL);
 client.connect();
@@ -183,3 +187,28 @@ app.delete('/users/delete/:id' , (req, res) => {
     .then(results => res.send('Delete successful'))
     .catch(err => console.error(err));
 });
+
+//test
+
+app.get('/map', (req, res) => {
+  googleMapsClient.geocode({address: '47.3055312, -122.3744209'})
+  .asPromise()
+  .then((response) => {
+    res.send(response)
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+})
+
+app.get('/directions/:userLocation/:restLocation', (req, res) =>{
+  googleMapsClient.directions({
+    origin: `${req.params.userLocation}`,
+    destination: `${req.params.restLocation}`,
+  })
+  .asPromise()
+  .then(response => res.send(response.json.routes[0].legs[0].distance))
+  .catch((err) => {
+    console.log(err);
+  });
+})

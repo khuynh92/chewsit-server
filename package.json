@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Chewsit/chewsit-server#readme",
   "dependencies": {
+    "@google/maps": "^0.4.6",
     "cors": "^2.8.4",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
