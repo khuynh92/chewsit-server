@@ -5,9 +5,11 @@ import User from '../models/users.js';
 const router = express.Router();
 
 router.post('/signup', (req, res, next) => {
-  if(!Object.keys(req.body).length) {
+  if(!Object.keys(req.body).length || !req.body.username || !req.body.email || !req.body.password) {
     next(400);
   }
+
+
 
   let user = new User(req.body);
 
