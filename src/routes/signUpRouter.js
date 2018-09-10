@@ -4,10 +4,6 @@ import User from '../models/users.js';
 
 const router = express.Router();
 
-router.get('/api/v1/users', (req, res, next) => {
-  res.send('hello world!');
-});
-
 router.post('/signup', (req, res, next) => {
   if(!Object.keys(req.body).length) {
     next(400);
@@ -16,8 +12,9 @@ router.post('/signup', (req, res, next) => {
   let user = new User(req.body);
 
   user.save()
-    .then(data => {
-      res.send(data);
+    .then(user => {
+      let token = user.generateToken();
+      res.send(token);
     })
     .catch(err => {
       next(err);
