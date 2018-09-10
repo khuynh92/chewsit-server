@@ -10,11 +10,31 @@ router.get('/signin', auth, (req, res) => {
   res.send(req.token);
 });
 
-router.get('/oauth/google/code', (req,res,next) => {
+router.get('/oauth/google/code', (req, res, next) => {
   oauth.googleAuthorize(req)
-    .then(token => {
-      res.cookie('token', token);
-      res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+    .then(user => {
+      res.cookie('token', user.token);
+
+      if (user.redirect) {
+        res.redirect(`${process.env.CLIENT_URL}/preferences`);
+      } else {
+        res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+      }
+    })
+    .catch(next);
+});
+
+router.get('/oauth/linkedIn/code', (req, res, next) => {
+  oauth.linkedInAuthorize(req)
+    .then(user => {
+      res.cookie('token', user.token);
+
+      if (user.redirect) {
+        res.redirect(`${process.env.CLIENT_URL}/preferences`);
+
+      } else {
+        res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+      }
     })
     .catch(next);
 });

@@ -83,7 +83,7 @@ userSchema.statics.createFromOAuth = function (googleUser) {
     .then(user => {
       if (!user) { throw new Error('User Not Found'); }
       console.log('Welcome Back!', user.username);
-      return user;
+      return { user, redirect: false };
     })
     .catch((error) => {
       console.log(error);
@@ -94,7 +94,10 @@ userSchema.statics.createFromOAuth = function (googleUser) {
         username: username,
         password: password,
         email: googleUser.email,
+      }).then(newUser => {
+        return {user: newUser, redirect: true};
       });
+
     });
 };
 

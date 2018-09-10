@@ -37,8 +37,8 @@ const googleAuthorize = req => {
     })
     .then(newUser => {
       console.log('5. user model created, making token');
-      req.id = newUser._id;
-      return newUser.generateToken();
+      req.id = newUser.user._id;
+      return {token: newUser.user.generateToken(), redirect: newUser.redirect}
     });
 };
 
@@ -76,8 +76,8 @@ const linkedInAuthorize = req => {
     })
     .then(newUser => {
       console.log('5. user model created, making token');
-      req.id = newUser._id;
-      return newUser.generateToken();
+      req.id = newUser.user._id;
+      return {token: newUser.user.generateToken(), redirect: newUser.redirect}
     });
 };
 
