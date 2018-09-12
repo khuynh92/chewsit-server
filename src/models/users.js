@@ -30,7 +30,7 @@ userSchema.pre('save', function (next) {
     });
 });
 
-userSchema.post('save', function (next) {
+userSchema.post('save', function () {
 
   let newProfile = new Profile({
     userID: this._id,
