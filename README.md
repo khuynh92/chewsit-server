@@ -1,6 +1,8 @@
 # Chewsit Server
 
-This is the server for chewsit 3.0
+This is the server for chewsit 3.0. Currently being rebuilt using MongoDB and express.
+
+Visit the front end repository at https://github.com/khuynh92/chewsit-client
 
 ## Setup
 
