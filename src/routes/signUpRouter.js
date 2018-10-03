@@ -9,8 +9,6 @@ router.post('/signup', (req, res, next) => {
     next(400);
   }
 
-
-
   let user = new User(req.body);
 
   user.save()
