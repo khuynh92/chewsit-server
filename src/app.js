@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import signUpRouter from './routes/signUpRouter.js';
 import profileRouter from './routes/profileRouter.js';
 import signInRouter from './routes/signInRouter.js';
+import yelpRouter from './routes/yelpRouter.js';
 
 import errorHandler from './middleware/error.js';
 import notFound from './middleware/404.js';
@@ -22,11 +23,12 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
-app.use(cors())
+app.use(cors());
 //routes middleware
 app.use(signUpRouter);
 app.use(signInRouter);
 app.use(profileRouter);
+app.use(yelpRouter);
 
 //error middleware
 app.use(notFound);

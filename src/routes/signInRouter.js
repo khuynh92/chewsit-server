@@ -39,4 +39,19 @@ router.get('/oauth/linkedIn/code', (req, res, next) => {
     .catch(next);
 });
 
+router.get('/oauth/facebook/code', (req, res, next) => {
+  oauth.facebookAuthorize(req)
+    .then(user => {
+      res.cookie('token', user.token);
+
+      if (user.redirect) {
+        res.redirect(`${process.env.CLIENT_URL}/preferences`);
+
+      } else {
+        res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+      }
+    })
+    .catch(next);
+});
+
 export default router;

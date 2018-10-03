@@ -41,7 +41,6 @@ userSchema.post('save', function () {
   newProfile.save()
     .then(() => {
       console.log('profile created!');
-      next();
     })
     .catch(err => {
       throw err;
@@ -74,12 +73,12 @@ userSchema.methods.generateToken = function () {
   return jwt.sign({ id: this._id, capabilities: capabilities[this.role] }, process.env.APP_SECRET || 'somethingelseifoauth');
 };
 
-userSchema.statics.createFromOAuth = function (googleUser) {
-  if (!googleUser || !googleUser.email) {
+userSchema.statics.createFromOAuth = function (oAuthUser) {
+  if (!oAuthUser || !oAuthUser.email) {
     return Promise.reject('VALIDATION ERROR: missing username/email or password');
   }
 
-  return this.findOne({ email: googleUser.email })
+  return this.findOne({ email: oAuthUser.email })
     .then(user => {
       if (!user) { throw new Error('User Not Found'); }
       console.log('Welcome Back!', user.username);
@@ -87,13 +86,12 @@ userSchema.statics.createFromOAuth = function (googleUser) {
     })
     .catch((error) => {
       console.log(error);
-      console.log(googleUser);
-      let username = googleUser.email;
-      let password = googleUser.given_name + googleUser.sub + googleUser.family_name + 'youwontguessthispassword';
+      let username = oAuthUser.email;
+      let password = oAuthUser.first_name + oAuthUser.id + oAuthUser.last_name + process.env.PASSWORD + oAuthUser.email.split('@')[0];
       return this.create({
         username: username,
         password: password,
-        email: googleUser.email,
+        email: oAuthUser.email,
       }).then(newUser => {
         return {user: newUser, redirect: true};
       });
