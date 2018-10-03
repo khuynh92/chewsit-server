@@ -13,7 +13,7 @@ router.get('/signin', auth, (req, res) => {
 router.get('/oauth/google/code', (req, res, next) => {
   oauth.googleAuthorize(req)
     .then(user => {
-      res.cookie('token', user.token, {domain: 'herokuapp.com'});
+      res.cookie('token', user.token, {domain: '.herokuapp.com'});
 
       if (user.redirect) {
         res.redirect(`${process.env.CLIENT_URL}/preferences`);
@@ -27,7 +27,7 @@ router.get('/oauth/google/code', (req, res, next) => {
 router.get('/oauth/linkedIn/code', (req, res, next) => {
   oauth.linkedInAuthorize(req)
     .then(user => {
-      res.cookie('token', user.token, {domain: 'herokuapp.com'});
+      res.cookie('token', user.token, {domain: '.herokuapp.com'});
 
       if (user.redirect) {
         res.redirect(`${process.env.CLIENT_URL}/preferences`);
