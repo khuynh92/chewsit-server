@@ -11,4 +11,11 @@ router.get('/api/v3/yelp/:food/:location/:price/:range/:offset', (req, res) => {
     .catch(err => console.error(err));
 });
 
+router.get('/api/v1/yelp/photos/:id', (req, res) => {
+  superagent.get(`https://api.yelp.com/v3/businesses/${req.params.id}`)
+    .set('Authorization', `Bearer ${process.env.YELP_API_KEY}`)
+    .then(results => res.send(results.body.photos)) 
+    .catch(err => console.error(err));
+});
+
 export default router;
