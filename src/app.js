@@ -7,6 +7,7 @@ import signUpRouter from './routes/signUpRouter.js';
 import profileRouter from './routes/profileRouter.js';
 import signInRouter from './routes/signInRouter.js';
 import yelpRouter from './routes/yelpRouter.js';
+import googleRouter from './routes/googleRouter.js';
 
 import errorHandler from './middleware/error.js';
 import notFound from './middleware/404.js';
@@ -29,6 +30,7 @@ app.use(signUpRouter);
 app.use(signInRouter);
 app.use(profileRouter);
 app.use(yelpRouter);
+app.use(googleRouter);
 
 //error middleware
 app.use(notFound);

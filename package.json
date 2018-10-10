@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/khuynh92/chewsit-server#readme",
   "dependencies": {
+    "@google/maps": "^0.5.5",
     "babel-env": "^2.4.1",
     "babel-eslint": "^8.2.3",
     "babel-register": "^6.26.0",
