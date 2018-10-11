@@ -5,6 +5,7 @@ const profileSchema = new mongoose.Schema({
   username: {type: String, required: true},
   email: {type: String, required: true},
   preferences: {type: Array, default: []},
+  favorites: {type: Array, default: []},
 });
 
 export default mongoose.model('Profile', profileSchema);

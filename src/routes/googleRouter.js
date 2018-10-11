@@ -7,7 +7,6 @@ const googleMapsClient = googleMaps.createClient({
 
 const router = express.Router();
 
-//Changed open now to false to test categories after hours 
 router.get('/api/v1/google/:address', (req, res) => {
 
   googleMapsClient.geocode({ 'address': req.params.address }, (results, status) => {
